@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+
+# Local caches
+.cache/
+.task/
+.pytest_cache/
+__pycache__/
+
+# Build and generated outputs
+build/
+dist/
+target/
+coverage/
+htmlcov/
+
+# Coverage and compiled artifacts
+.coverage
+*.pyc
+*.profraw
+*.profdata
+*.wasm
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
