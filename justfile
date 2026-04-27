@@ -1,5 +1,9 @@
 export PATH := env_var('HOME') + "/.local/bin:" + env_var('HOME') + "/.cargo/bin:" + env_var('HOME') + "/go/bin:" + env_var('PATH')
-export UV_CACHE_DIR := env_var_or_default('UV_CACHE_DIR', '.cache/uv')
+LOCAL_HARNESS_DIR := justfile_directory() + "/.harness"
+export HARNESS_DIR := env_var_or_default('HARNESS_DIR', LOCAL_HARNESS_DIR)
+export HARNESS_OUTPUT_DIR := env_var_or_default('HARNESS_OUTPUT_DIR', HARNESS_DIR + "/outputs")
+export HARNESS_CACHE_DIR := env_var_or_default('HARNESS_CACHE_DIR', HARNESS_DIR + "/cache")
+export UV_CACHE_DIR := env_var_or_default('UV_CACHE_DIR', HARNESS_CACHE_DIR + "/test-harness/uv")
 
 # List available commands
 default:
@@ -19,8 +23,8 @@ coverage: test
 
 # Remove generated outputs while preserving dependency state
 clean:
-    rm -rf __pycache__ .pytest_cache .coverage htmlcov output
+    rm -rf __pycache__ .pytest_cache .coverage htmlcov output "$HARNESS_OUTPUT_DIR/test-harness"
 
 # Remove generated outputs and setup artifacts
 purge: clean
-    rm -rf .venv
+    rm -rf .venv "$UV_CACHE_DIR" "{{LOCAL_HARNESS_DIR}}" "$HARNESS_CACHE_DIR/test-harness" "$HARNESS_OUTPUT_DIR/test-harness"

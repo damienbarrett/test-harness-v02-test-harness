@@ -3,11 +3,20 @@ version: "3"
 vars:
   TOOL_PATH:
     sh: printf '%s' "$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go/bin:$PATH"
+  HARNESS_DIR:
+    sh: printf '%s' "${HARNESS_DIR:-{{.TASKFILE_DIR}}/.harness}"
+  HARNESS_OUTPUT_DIR:
+    sh: printf '%s' "${HARNESS_OUTPUT_DIR:-${HARNESS_DIR:-{{.TASKFILE_DIR}}/.harness}/outputs}"
+  HARNESS_CACHE_DIR:
+    sh: printf '%s' "${HARNESS_CACHE_DIR:-${HARNESS_DIR:-{{.TASKFILE_DIR}}/.harness}/cache}"
   UV_CACHE_DIR:
-    sh: printf '%s' "${UV_CACHE_DIR:-.cache/uv}"
+    sh: printf '%s' "${UV_CACHE_DIR:-${HARNESS_CACHE_DIR:-${HARNESS_DIR:-{{.TASKFILE_DIR}}/.harness}/cache}/test-harness/uv}"
 
 env:
   PATH: "{{.TOOL_PATH}}"
+  HARNESS_DIR: "{{.HARNESS_DIR}}"
+  HARNESS_OUTPUT_DIR: "{{.HARNESS_OUTPUT_DIR}}"
+  HARNESS_CACHE_DIR: "{{.HARNESS_CACHE_DIR}}"
   UV_CACHE_DIR: "{{.UV_CACHE_DIR}}"
 
 tasks:
@@ -35,10 +44,10 @@ tasks:
   clean:
     desc: Remove generated outputs while preserving dependency state
     cmds:
-      - rm -rf __pycache__ .pytest_cache .coverage htmlcov output
+      - rm -rf __pycache__ .pytest_cache .coverage htmlcov output "$HARNESS_OUTPUT_DIR/test-harness"
 
   purge:
     desc: Remove generated outputs and setup artifacts
     cmds:
       - task: clean
-      - rm -rf .venv
+      - rm -rf .venv "$UV_CACHE_DIR" "{{.TASKFILE_DIR}}/.harness" "$HARNESS_CACHE_DIR/test-harness" "$HARNESS_OUTPUT_DIR/test-harness"
