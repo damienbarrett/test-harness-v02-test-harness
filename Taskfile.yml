@@ -1,0 +1,44 @@
+version: "3"
+
+vars:
+  TOOL_PATH:
+    sh: printf '%s' "$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go/bin:$PATH"
+  UV_CACHE_DIR:
+    sh: printf '%s' "${UV_CACHE_DIR:-.cache/uv}"
+
+env:
+  PATH: "{{.TOOL_PATH}}"
+  UV_CACHE_DIR: "{{.UV_CACHE_DIR}}"
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  setup:
+    desc: Install test harness dependencies
+    cmds:
+      - uv run --with pyyaml python -c 'import yaml'
+      - uv run --with wasmtime==43.0.0 python -c 'import wasmtime'
+
+  test:
+    desc: Run test harness self-checks
+    cmds:
+      - ./check-runner-parity.py
+
+  coverage:
+    desc: Run test harness coverage checks
+    cmds:
+      - task: test
+
+  clean:
+    desc: Remove generated outputs while preserving dependency state
+    cmds:
+      - rm -rf __pycache__ .pytest_cache .coverage htmlcov output
+
+  purge:
+    desc: Remove generated outputs and setup artifacts
+    cmds:
+      - task: clean
+      - rm -rf .venv

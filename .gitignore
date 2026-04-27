@@ -3,11 +3,13 @@
 
 # Local caches
 .cache/
+.venv/
 .task/
 .pytest_cache/
 __pycache__/
 
 # Build and generated outputs
+output/
 build/
 dist/
 target/
