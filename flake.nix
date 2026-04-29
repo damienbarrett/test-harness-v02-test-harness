@@ -14,6 +14,8 @@
           packages = [
             pkgs.python313
             pkgs.uv
+            pkgs.go-task
+            pkgs.just
           ];
         };
       });

@@ -1,4 +1,3 @@
-export PATH := env_var('HOME') + "/.local/bin:" + env_var('HOME') + "/.cargo/bin:" + env_var('HOME') + "/go/bin:" + env_var('PATH')
 export UV_CACHE_DIR := env_var_or_default('UV_CACHE_DIR', '.cache/uv')
 
 # List available commands
