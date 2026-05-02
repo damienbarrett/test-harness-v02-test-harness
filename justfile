@@ -11,6 +11,10 @@ setup:
 
 # Run test harness self-checks
 test:
+    uv run --with pyyaml --with wasmtime==43.0.0 python -m py_compile check-runner-parity.py run-wasm-tests.py
+
+# Check Taskfile.yml and justfile parity
+check-runners:
     ./check-runner-parity.py
 
 # Run test harness coverage checks

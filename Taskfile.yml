@@ -22,6 +22,11 @@ tasks:
   test:
     desc: Run test harness self-checks
     cmds:
+      - uv run --with pyyaml --with wasmtime==43.0.0 python -m py_compile check-runner-parity.py run-wasm-tests.py
+
+  check-runners:
+    desc: Check Taskfile.yml and justfile parity
+    cmds:
       - ./check-runner-parity.py
 
   coverage:
